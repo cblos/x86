@@ -77,6 +77,78 @@ startup:
     CMP                     ECX, buffer_size_sectors
     JB                      .break
 
+    ;; Saving counter
+    PUSH                    EAX
+    PUSH                    ECX
+    PUSH                    EDI
+
+    ;; Populating buffer
+    MOV                     ECX, buffer_size_sectors
+    MOV                     BX, startup_end,
+    MOV                     DX, 0x0
+
+    ;; Load sectors
+    CALL                    load
+
+    ;; Setup UMode
+    CALL                    unreal
+    POP                     EDI
+
+    ;; Move data
+    MOV                     ESI, startup_end
+    MOV                     ECX, buffer_size_sectors * 512 / 4
+    CLD
+    A32                     REP MOVSD
+
+    POP                     ECX
+    POP                     EAX
+
+    ADD                     EAX, buffer_size_sectors
+    SUB                     EAX, buffer_size_sectors
+    JMP                     .lp
+
+.break:
+    ;; Load the part of the kernel that does not fill the buffer completely
+    TEST                    ECX, ECX
+    JZ                      .finish
+
+    PUSH                    ECX
+    PUSH                    EDI
+
+    MOV                     BX, startup_end
+    MOV                     DX, 0x0
+    CALL                    load
+
+    ;; Moving remnants of kernel
+    CALL                    unreal
+
+    POP                     EDI
+    POP                     ECX
+
+    MOV                     ESI, startup_end
+    SHL                     ECX, 7 ; * 512 / 4
+    CLD
+    A32                     REP MOVSD
+
+.finish:
+    call print_line
+    ret
+
+%include "config.asm"
+%include "descriptor_flags.inc"
+%include "gdt_entry.inc"
+%include "unreal.asm"
+%include "memory_map.asm"
+%include "vesa.asm"
+%include "initialize.asm"
+%include "cpuid.asm"
+%ifndef KERNEL
+    %include "kernelfs.asm"
+    %ifndef FILESYSTEM
+        %include "partitions.asm"
+    %endif
+%endif
+
 init_fpu_msg:               DB "Init FPU", 13, 10, 0
 init_sse_msg:               DB "Init SSE", 13, 10, 0
 init_pit_msg:               DB "Init PIT", 13, 10, 0
