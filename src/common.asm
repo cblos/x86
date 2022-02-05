@@ -46,9 +46,36 @@ startup:
     CALL                    memory_map
     CALL                    vesa
 
-    ;; ...
-
+    ;; Initialize FPU
     MOV                     SI, init_fpu_msg
+    CALL                    print
+    CALL                    initialize.fpu
+
+    ;; Initialize SSE
+    MOV                     SI, init_sse_msg
+    CALL                    print
+    CALL                    initialize.sse
+
+    ;; Startup
+    MOV                     SI, startup_arch_msg
+    CALL                    print
+    JMP                     startup_arch
+
+;; Load a disc extent into high memory
+;; EAX - Sector address
+;; ECX - Sector count
+;; EDI - Destination
+.load_extent:
+    ;; Loading kernel to 1MiB
+    ;; Mov part of kernel to `startup_end` via `bootsector#load`
+    ;; and then copy it up
+    
+    ;; Repeat until all of kernel is loaded
+    buffer_size_sectors     EQU 127
+
+.lp:
+    CMP                     ECX, buffer_size_sectors
+    JB                      .break
 
 init_fpu_msg:               DB "Init FPU", 13, 10, 0
 init_sse_msg:               DB "Init SSE", 13, 10, 0
