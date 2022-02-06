@@ -138,7 +138,7 @@ startup:
 %include "inc/descriptor-flags.inc"
 %include "inc/gdt-entry.inc"
 %include "unreal.asm"
-%include "memory_map.asm"
+%include "memory-map.asm"
 %include "vesa.asm"
 %include "initialize.asm"
 %include "cpuid.asm"
