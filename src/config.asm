@@ -28,7 +28,7 @@ save_config:
 ;;   AX, BX, CX, DX, SI
 
 ;; TODO rewrite to (eventually) move larger parts at once
-;; If that is done, increase `buffer_size_sectors` in `startup-common.asm`
+;; If that is done, increase `buffer_size_sectors` in `common.asm`
 ;; to that (max 0x80000 - startup_end)
 store:
     CMP                     CX, 127
