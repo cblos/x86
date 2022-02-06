@@ -4,8 +4,8 @@ USE16
 align                       512, DB 0
 
 config:
-  .xres:                    DW 0
-  .yres:                    DW 0
+    .xres:                  DW 0
+    .yres:                  DW 0
 
 times                       512 - ($ - config) db 0
 
@@ -55,7 +55,7 @@ store:
     MOV                     DL, [ disk ]
     MOV                     SI, DAPACK
     MOV                     Ah, 0x43
-    INT 0x13
+    INT                     0x13
     
     JC                      error
     RET
