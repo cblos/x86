@@ -50,9 +50,9 @@ kernelfs:
     ;; EAX - Node
     ;; BX - Buffer
     .node:
-        SHL                 EAX, ( BLOCK_SHIFT - 9 )
-        ADD                 EAX, [ kernelfs.first_sector ]
-        MOV                 CX, ( BLOCK_SIZE / 512 )
+        SHL                 EAX, (BLOCK_SHIFT - 9)
+        ADD                 EAX, [kernelfs.first_sector]
+        MOV                 CX, (BLOCK_SIZE / 512)
         MOV                 DX, 0
         CALL                load
         CALL                print_line
@@ -89,8 +89,8 @@ kernelfs.open:
         MOV                 BX, 0
 
     .sig:
-        MOV                 AL, [ kernelfs.header + Header.signature + BX ]
-        MOV                 AH, [ .signature + BX ]
+        MOV                 AL, [kernelfs.header + Header.signature + BX]
+        MOV                 AH, [.signature + BX]
         CMP                 AL, AH
         JNE                 .sig_err
         INC                 BX
@@ -99,13 +99,13 @@ kernelfs.open:
         MOV                 BX, 0
 
     .ver:
-        MOV                 AL, [ kernelfs.header + Header.version + BX ]
-        MOV                 AH, [ .version + BX ]
+        MOV                 AL, [kernelfs.header + Header.version + BX]
+        MOV                 AH, [.version + BX]
         CMP                 AL, AH
         JNE                 .ver_err
         INC                 BX
         JL                  .ver
-        LEA                 SI, [ kernelfs.header + Header.signature ]
+        LEA                 SI, [kernelfs.header + Header.signature]
         CALL                print
         MOV                 AL, ' '
         CALL                print_char
@@ -167,7 +167,7 @@ kernelfs.open:
 
     .uuid.below_0xA:
         ADD                 AL, '0'
-        MOV                 [ DI ], AL
+        MOV                 [DI], AL
         INC                 DI
         SHL                 BX, 4
         LOOP                .uuid.char
@@ -205,7 +205,7 @@ kernelfs.open:
 
 
 kernelfs.root:
-        LEA                 SI, [ kernelfs.dir + Node.name ]
+        LEA                 SI, [kernelfs.dir + Node.name]
         CALL                print
         CALL                print_line
 
@@ -213,10 +213,10 @@ kernelfs.root:
         MOV                 BX, 0
 
     .ext:
-        MOV                 EAX, [ kernelfs.dir + Node.extents + BX + Extent.block ]
+        MOV                 EAX, [kernelfs.dir + Node.extents + BX + Extent.block]
         TEST                EAX, EAX
         JS                  .next
-        MOV                 ECX, [ kernelfs.dir + Node.extents + BX + Extent.length ]
+        MOV                 ECX, [kernelfs.dir + Node.extents + BX + Extent.length]
         TEST                ECX, ECX
         JZ                  .next
         ADD                 ECX, BLOCK_SIZE
@@ -232,8 +232,8 @@ kernelfs.root:
         MOV                 BX, 0
 
     .ext_sec_kernel:
-        MOV                 AL, [ kernelfs.file + Node.name + BX ]
-        MOV                 AH, [ .kernel_name + BX ]
+        MOV                 AL, [kernelfs.file + Node.name + BX]
+        MOV                 AH, [.kernel_name + BX]
         cmp                 AL, AH
         JNE                 .ext_sec_kernel_break
         INC                 BX
@@ -256,7 +256,7 @@ kernelfs.root:
         JB                  .ext
 
     .next:
-        MOV                 EAX, [ kernelfs.dir + Node.next ]
+        MOV                 EAX, [kernelfs.dir + Node.next]
         TEST                EAX, EAX
         JZ                  .no_kernel
         MOV                 BX, kernelfs.dir
@@ -276,10 +276,10 @@ kernelfs.root:
     .no_kernel_msg:         db "Did not find: ",0
 
 kernelfs.kernel:
-        LEA                 SI, [ kernelfs.file + Node.name ]
+        LEA                 SI, [kernelfs.file + Node.name]
         CALL                print
         CALL                print_line
-        MOV                 EDI, [ args.kernel_base ]
+        MOV                 EDI, [args.kernel_base]
 
     .lp:
         MOV                 BX, 0
