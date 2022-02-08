@@ -6,7 +6,7 @@ USE16
 unreal:
     CLI
 
-    LGDT                    [ unreal_gdtr ]
+    LGDT                    [unreal_gdtr]
 
     PUSH ES
     PUSH DS
