@@ -19,11 +19,11 @@ startup:
     OUT                     0x92, 2
 
     %ifdef KERNEL
-        MOV                 EDI, [ args.kernel_base ]
-        MOV                 ECX, ( kernel_file.end - kernel_file )
-        MOV                 [ args.kernel_size ], ECX
+        MOV                 EDI, [args.kernel_base]
+        MOV                 ECX, (kernel_file.end - kernel_file)
+        MOV                 [args.kernel_size], ECX
 
-        MOV EAX,            ( kernel_file - boot ) / 512
+        MOV EAX,            (kernel_file - boot) / 512
         ADD                 ECX, 511
         SHR                 ECX, 9
         CALL                load_extent

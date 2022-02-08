@@ -45,14 +45,14 @@ store:
     JMP                     store
 
 .good_size:
-    MOV                     [ DAPACK.addr ], EAX
-    MOV                     [ DAPACK.buf ], BX
-    MOV                     [ DAPACK.count ], CX
-    MOV                     [ DAPACK.seg ], DX
+    MOV                     [DAPACK.addr], EAX
+    MOV                     [DAPACK.buf], BX
+    MOV                     [DAPACK.count], CX
+    MOV                     [DAPACK.seg], DX
 
     call                    print_dapack
 
-    MOV                     DL, [ disk ]
+    MOV                     DL, [disk]
     MOV                     SI, DAPACK
     MOV                     Ah, 0x43
     INT                     0x13
