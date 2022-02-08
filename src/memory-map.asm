@@ -15,7 +15,7 @@ memory_map:
 
     MOV                 DI, .start
     MOV                 EAX, 0x534D4150
-    xor                 EBX, EBX
+    XOR                 EBX, EBX
 
 .lp:
     MOV                 EAX, 0xE820
