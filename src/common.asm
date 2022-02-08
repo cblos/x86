@@ -145,7 +145,7 @@ startup:
 %ifndef KERNEL
     %include "kernelfs.asm"
     %ifndef FILESYSTEM
-        %include "partitions.asm"
+        %include "partition.asm"
     %endif
 %endif
 
